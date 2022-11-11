@@ -1,0 +1,5 @@
+dependencies {
+    // Client doesn't on the server directly but it talks through REST
+    implementation("org.springframework:spring-web:5.3.23")
+    implementation("org.springframework.boot:spring-boot:${spring_boot_version}")
+}

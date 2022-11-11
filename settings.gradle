@@ -1,1 +1,5 @@
 rootProject.name = 'CoverageDemo'
+
+apply from: "api/modules.gradle"
+apply from: "app/modules.gradle"
+apply from: "test/modules.gradle"

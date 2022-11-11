@@ -1,0 +1,23 @@
+allprojects {
+    repositories {
+        mavenCentral()
+    }
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'jacoco'
+
+    sourceCompatibility = 17
+    targetCompatibility = 17
+
+    dependencies {
+        testImplementation("org.junit.jupiter:junit-jupiter-api:${junit_version}")
+        testImplementation("org.junit.jupiter:junit-jupiter-engine:${junit_version}")
+        testImplementation "org.assertj:assertj-core:${assertj_version}"
+    }
+
+    test {
+        useJUnitPlatform()
+    }
+}
