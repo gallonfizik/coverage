@@ -1,0 +1,6 @@
+dependencies {
+    testImplementation(project(":api"))
+    testImplementation(project(":app:server"))
+
+    testImplementation("org.springframework.boot:spring-boot-starter-test:${spring_boot_version}")
+}

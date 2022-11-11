@@ -6,3 +6,5 @@ buildscript {
         }
     }
 }
+
+apply from: "${project.rootDir}/gradle/config/core.gradle"
