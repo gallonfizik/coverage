@@ -1,0 +1,67 @@
+/**
+ * Intended to be applied in a project { } scope.
+ * Searches for the project's transitive dependencies and appends sources and classes
+ * to JaCoCo scope. This enables cross-project coverage collection.
+ */
+import org.gradle.api.internal.artifacts.dependencies.DefaultProjectDependency
+
+apply plugin: 'jacoco'
+
+test {
+    finalizedBy(jacocoTestReport)
+
+    /**
+     * This may seem weird to be seen here.
+     * However, in the jacocoTestReport { } scope in configuration phase, not all dependencies are yet resolved,
+     * and in the execution phase, the destination properties additionalSourceDirs/additionalClassDir are readonly.
+     */
+    doLast {
+        var pendingProjects = new LinkedList<>()
+        var completedProjects = new HashSet<>()
+        pendingProjects.push(project)
+
+        while (!pendingProjects.isEmpty()) {
+            var currentProject = pendingProjects.removeFirst()
+            assert (!completedProjects.contains(currentProject))
+
+            currentProject.configurations.forEach((Configuration configuration) -> {
+                configuration.getAllDependencies().forEach(d -> {
+                    if (!(d instanceof ProjectDependency || d instanceof DefaultProjectDependency)) {
+                        return
+                    }
+                    var dependencyProject = d.dependencyProject
+                    if (dependencyProject == currentProject) {
+                        return
+                    }
+                    if (completedProjects.contains(dependencyProject)) {
+                        // already seen
+                    } else if (pendingProjects.contains(dependencyProject)) {
+                        // already scheduled
+                    } else {
+                        pendingProjects.addLast(dependencyProject)
+                    }
+                })
+            })
+
+            if (currentProject.hasProperty('sourceSets')) {
+                jacocoTestReport.additionalSourceDirs.from(files(currentProject.sourceSets.main.java.srcDirs))
+                jacocoTestReport.additionalClassDirs.from(files(currentProject.sourceSets.main.output.classesDirs))
+            }
+
+            completedProjects.add(currentProject)
+        }
+    }
+}
+
+jacoco {
+    toolVersion "0.8.8"
+}
+
+jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+
+    dependsOn(test)
+}

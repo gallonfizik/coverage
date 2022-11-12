@@ -6,7 +6,6 @@ allprojects {
 
 subprojects {
     apply plugin: 'java'
-    apply plugin: 'jacoco'
 
     sourceCompatibility = 17
     targetCompatibility = 17
@@ -20,4 +19,6 @@ subprojects {
     test {
         useJUnitPlatform()
     }
+
+    apply from: "${project.rootDir}/gradle/config/jacoco.gradle"
 }
