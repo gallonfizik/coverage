@@ -1,0 +1,32 @@
+apply plugin: "org.sonarqube"
+
+project(':test') {
+    apply plugin: 'jacoco-report-aggregation'
+
+    testCodeCoverageReport {
+        rootProject.allprojects.forEach(currentProject -> {
+            if (currentProject.hasProperty('sourceSets')) {
+                sourceDirectories.from(files(currentProject.sourceSets.main.java.srcDirs))
+                classDirectories.from(files(currentProject.sourceSets.main.output.classesDirs))
+            }
+        })
+
+        reports {
+            xml.required = true
+            html.required = true
+        }
+    }
+}
+
+/**
+ * For some reason, property isn't applied to the root project.
+ * Maybe change phase/doFirst/doLast etc would help.
+ */
+allprojects {
+    sonar {
+        properties {
+            // provide path to the aggregate report
+            property "sonar.coverage.jacoco.xmlReportPaths", "${rootProject.projectDir}/test/build/reports/jacoco/testCodeCoverageReport/testCodeCoverageReport.xml"
+        }
+    }
+}
