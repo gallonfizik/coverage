@@ -8,3 +8,8 @@ buildscript {
 }
 
 apply from: "${project.rootDir}/gradle/config/core.gradle"
+
+// Pick a project with sources that will hold aggregated  report
+project(':test') {
+    apply from: "${project.rootDir}/gradle/config/jacoco_aggregated_report.gradle"
+}
