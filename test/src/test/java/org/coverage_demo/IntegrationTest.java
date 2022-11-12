@@ -20,4 +20,10 @@ class IntegrationTest {
     void callApiMethod() {
         assertThat(new Client(port).two()).isEqualTo(2);
     }
+
+    @Test
+    @DisplayName("Call /foure and make sure real backend is called for transitive coverage.")
+    void callAnotherApiMethod() {
+        assertThat(new Client(port).four()).isEqualTo(4);
+    }
 }

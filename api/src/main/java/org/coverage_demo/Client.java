@@ -27,4 +27,11 @@ public class Client {
     int three() {
         return THREE;
     }
+
+    public int four() {
+        return Objects.requireNonNull(
+                restOperations.getForObject("http://localhost:%d/four".formatted(port), Integer.class)
+        );
+    }
+
 }
