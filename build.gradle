@@ -5,11 +5,12 @@ buildscript {
             url "https://plugins.gradle.org/m2/"
         }
     }
+
+    dependencies {
+        // can't be externalized with "apply from", must be specified here manually
+        classpath("org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:${sonarqube_gradle_plugin_version}")
+    }
 }
 
 apply from: "${project.rootDir}/gradle/config/core.gradle"
-
-// Pick a project with sources that will hold aggregated  report
-project(':test') {
-    apply from: "${project.rootDir}/gradle/config/jacoco_aggregated_report.gradle"
-}
+apply from: "${project.rootDir}/gradle/config/sonar_with_aggregated_report.gradle"
