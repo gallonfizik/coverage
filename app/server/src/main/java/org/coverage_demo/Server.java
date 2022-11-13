@@ -20,4 +20,9 @@ public class Server {
     int three() {
         return THREE;
     }
+
+    @GetMapping("four")
+    public int four() {
+        return new DB().four();
+    }
 }
